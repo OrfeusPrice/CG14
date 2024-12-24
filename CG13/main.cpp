@@ -26,12 +26,7 @@ float lastFrame = 0.0f;
 
 // lighting
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-int lightType = 2;
-int newLightType = 2;
-
-int shadintTypeCount = 4;
-int shadingType = 0;
-int newShadingType = 0;
+int lightType = 0;
 
 void checkOpenGLerror() {
 	/*
@@ -82,11 +77,11 @@ void Init()
 void processInput(sf::Window& window)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
-		newLightType = 0;
+		lightType = 0;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
-		newLightType = 1;
+		lightType = 1;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
-		newLightType = 2;
+		lightType = 2;
 
 	// Проверка закрытия окна при нажатии ESC
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -189,18 +184,21 @@ int main()
 	Init();
 
 	Shader shaders[] = {
-		Shader("5.4.spot.vs", "5.4.phong.fs"),
-		Shader("5.4.spot.vs", "5.4.toonshading.fs"),
-		Shader("5.4.spot.vs", "5.4.rim.fs"),
-		Shader("5.4.spot.vs", "5.4.ami_guch.fs"),
-		Shader("5.1.directional.vs", "5.1.phong.fs"),
-		Shader("5.1.directional.vs", "5.1.toonshading.fs"),
-		Shader("5.1.directional.vs", "5.1.rim.fs"),
-		Shader("5.1.directional.vs", "5.1.ami_guch.fs"),
-		Shader("5.2.point.vs", "5.2.phong.fs"),
-		Shader("5.2.point.vs", "5.2.toonshading.fs"),
-		Shader("5.2.point.vs", "5.2.rim.fs"),
-		Shader("5.2.point.vs", "5.2.ami_guch.fs")
+		Shader("VS.vs", "S.phong.fs"),
+		Shader("VS.vs", "S.toonshading.fs"),
+		Shader("VS.vs", "S.rim.fs"),
+		Shader("VS.vs", "S.ami_guch.fs"),
+		Shader("VS.vs", "P.ct.fs"),
+		Shader("VS.vs", "D.phong.fs"),
+		Shader("VS.vs", "D.toonshading.fs"),
+		Shader("VS.vs", "D.rim.fs"),
+		Shader("VS.vs", "D.ami_guch.fs"),
+		Shader("VS.vs", "P.ct.fs"),
+		Shader("VS.vs", "P.phong.fs"),
+		Shader("VS.vs", "P.toonshading.fs"),
+		Shader("VS.vs", "P.rim.fs"),
+		Shader("VS.vs", "P.ami_guch.fs"),
+		Shader("VS.vs", "P.ct.fs")
 	};
 
 	// Точечный источник света
@@ -259,13 +257,11 @@ int main()
 
 		// Прожектор
 		// Draw models
-		for (int i = 0; i < models.size() - 1; i++)
+		for (int i = 0; i < models.size(); i++)
 		{
-			if (newLightType == 0)
+			if (lightType == 0)
 			{
-				lightType = newLightType;
-				shadingType = i;
-				lightingShader = shaders[lightType * shadintTypeCount + shadingType];
+				lightingShader = shaders[lightType * 5 + i];
 
 				lightingShader.use();
 				lightingShader.setVec3("light.position", camera.Position);
@@ -290,11 +286,9 @@ int main()
 			}
 
 			// Направленный источник света
-			else if (newLightType == 1)
+			else if (lightType == 1)
 			{
-				lightType = newLightType;
-				shadingType = i;
-				lightingShader = shaders[lightType * shadintTypeCount + shadingType];
+				lightingShader = shaders[lightType * 5 + i];
 
 				lightingShader.use();
 				lightingShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
@@ -309,11 +303,9 @@ int main()
 				lightingShader.setFloat("material.shininess", 32.0f);
 			}
 			// Точечный источник света
-			else if (newLightType == 2)
+			else if (lightType == 2)
 			{
-				lightType = newLightType;
-				shadingType = i;
-				lightingShader = shaders[lightType * shadintTypeCount + shadingType];
+				lightingShader = shaders[lightType * 5 + i];
 
 				// be sure to activate shader when setting uniforms/drawing objects
 				lightingShader.use();
