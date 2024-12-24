@@ -186,19 +186,19 @@ int main()
 	Shader shaders[] = {
 		Shader("VS.vs", "S.phong.fs"),
 		Shader("VS.vs", "S.toonshading.fs"),
-		Shader("VS.vs", "S.rim.fs"),
 		Shader("VS.vs", "S.ami_guch.fs"),
-		Shader("VS.vs", "P.ct.fs"),
+		Shader("VS.vs", "S.toonshading.fs"),
+		Shader("VS.vs", "S.phong.fs"),
 		Shader("VS.vs", "D.phong.fs"),
 		Shader("VS.vs", "D.toonshading.fs"),
-		Shader("VS.vs", "D.rim.fs"),
 		Shader("VS.vs", "D.ami_guch.fs"),
-		Shader("VS.vs", "P.ct.fs"),
+		Shader("VS.vs", "D.toonshading.fs"),
+		Shader("VS.vs", "D.phong.fs"),
 		Shader("VS.vs", "P.phong.fs"),
 		Shader("VS.vs", "P.toonshading.fs"),
-		Shader("VS.vs", "P.rim.fs"),
 		Shader("VS.vs", "P.ami_guch.fs"),
-		Shader("VS.vs", "P.ct.fs")
+		Shader("VS.vs", "P.toonshading.fs"),
+		Shader("VS.vs", "P.phong.fs"),
 	};
 
 	// Точечный источник света
