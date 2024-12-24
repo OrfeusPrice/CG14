@@ -174,7 +174,7 @@ int main()
 {
 	setlocale(LC_ALL, "ru");
 
-	sf::Window window(sf::VideoMode(1000, 800), "Cats", sf::Style::Default, sf::ContextSettings(24));
+	sf::Window window(sf::VideoMode(1000, 800), "ONE PIECE", sf::Style::Default, sf::ContextSettings(24));
 	window.setVerticalSyncEnabled(true);
 
 	window.setMouseCursorVisible(false);
