@@ -32,13 +32,13 @@ void main()
     
     diff = step(0.2, diff) * 0.3 + step(0.6, diff) * 0.7; 
     
-    vec3 diffuse = lightProperties.lightDiffuse * diff * texture(materialProperties.diffuseMap, TexCoords).rgb;  
+    vec3 diffuseMap = lightProperties.lightDiffuse * diff * texture(materialProperties.diffuseMap, TexCoords).rgb;  
     
     vec3 viewDir = normalize(cameraPosition - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);  
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), materialProperties.shiness);
-    vec3 specular = lightProperties.lightSpecular * spec * texture(materialProperties.specularMap, TexCoords).rgb;  
+    vec3 specularMap = lightProperties.lightSpecular * spec * texture(materialProperties.specularMap, TexCoords).rgb;  
     
-    vec3 result = ambient + diffuse + specular;
+    vec3 result = ambient + diffuseMap + specularMap;
     FragColor = vec4(result, 1.0);
 }

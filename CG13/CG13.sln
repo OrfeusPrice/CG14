@@ -5,6 +5,20 @@ VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CG13", "CG13.vcxproj", "{4C42F604-3DA0-41DF-BE91-BD439891A57F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{005D2147-0896-4DA5-82D2-0CB981315601}"
+	ProjectSection(SolutionItems) = preProject
+		D.ami_guch.fs = D.ami_guch.fs
+		D.phong.fs = D.phong.fs
+		D.toonshading.fs = D.toonshading.fs
+		P.ami_guch.fs = P.ami_guch.fs
+		P.phong.fs = P.phong.fs
+		P.toonshading.fs = P.toonshading.fs
+		S.ami_guch.fs = S.ami_guch.fs
+		S.phong.fs = S.phong.fs
+		S.toonshading.fs = S.toonshading.fs
+		VS.vs = VS.vs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

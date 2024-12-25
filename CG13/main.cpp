@@ -174,8 +174,8 @@ int main()
 	};
 
 	lightingShader.use();
-	lightingShader.setInt("material.diffuse", 0);
-	lightingShader.setInt("material.specular", 1);
+	lightingShader.setInt("material.diffuseMap", 0);
+	lightingShader.setInt("material.specularMap", 1);
 	sf::Clock clock;
 
 	while (window.isOpen())
@@ -202,16 +202,16 @@ int main()
 				lightingShader.setVec3("light.direction", camera.Front);
 				lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
 				lightingShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
-				lightingShader.setVec3("viewPos", camera.Position);
+				lightingShader.setVec3("cameraPosition", camera.Position);
 
 				lightingShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
-				lightingShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
-				lightingShader.setVec3("light.specular", 0.8f, 0.8f, 0.8f);
+				lightingShader.setVec3("light.diffuseMap", 1.0f, 1.0f, 1.0f);
+				lightingShader.setVec3("light.specularMap", 0.8f, 0.8f, 0.8f);
 				lightingShader.setFloat("light.constant", 1.0f);
 				lightingShader.setFloat("light.linear", 0.09f);
 				lightingShader.setFloat("light.quadratic", 0.032f);
 
-				lightingShader.setFloat("material.shininess", 32.0f);
+				lightingShader.setFloat("material.shiness", 32.0f);
 			}
 
 			//D
@@ -237,16 +237,16 @@ int main()
 
 				lightingShader.use();
 				lightingShader.setVec3("light.position", lightPos);
-				lightingShader.setVec3("viewPos", camera.Position);
+				lightingShader.setVec3("cameraPosition", camera.Position);
 
 				lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-				lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-				lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+				lightingShader.setVec3("light.diffuseMap", 0.5f, 0.5f, 0.5f);
+				lightingShader.setVec3("light.specularMap", 1.0f, 1.0f, 1.0f);
 				lightingShader.setFloat("light.constant", 1.0f);
 				lightingShader.setFloat("light.linear", 0.09f);
 				lightingShader.setFloat("light.quadratic", 0.032f);
 
-				lightingShader.setFloat("material.shininess", 32.0f);
+				lightingShader.setFloat("material.shiness", 32.0f);
 			}
 
 			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);

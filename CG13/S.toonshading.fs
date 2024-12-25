@@ -2,9 +2,9 @@
 out vec4 FragColor;
 
 struct Material {
-    sampler2D diffuse;
-    sampler2D specular;    
-    float shininess;
+    sampler2D diffuseMap;
+    sampler2D specularMap;    
+    float shiness;
 }; 
 
 struct Light {
@@ -14,8 +14,8 @@ struct Light {
     float outerCutOff;
   
     vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec3 diffuseMap;
+    vec3 specularMap;
 	
     float constant;
     float linear;
@@ -26,7 +26,7 @@ in vec3 FragPos;
 in vec3 Normal;  
 in vec2 TexCoords;
   
-uniform vec3 viewPos;
+uniform vec3 cameraPosition;
 uniform Material material;
 uniform Light light;
 
@@ -39,7 +39,7 @@ void main()
     float epsilon = (light.cutOff - light.outerCutOff);
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
     
-    vec3 textureColor = texture(material.diffuse, TexCoords).rgb;
+    vec3 textureColor = texture(material.diffuseMap, TexCoords).rgb;
 
     vec3 color;
     if (intensity > 0.95)
