@@ -14,66 +14,23 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-// camera
 Camera camera(glm::vec3(-1.0f, 4.0f, 10.0f));
 float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
 
-// timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-// lighting
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 int lightType = 0;
 
-void checkOpenGLerror() {
-	/*
-	GLenum error;
-	while ((error = glGetError()) != GL_NO_ERROR) {
-		std::cout << "OpenGL Error: " << error << std::endl;
-
-		switch (error) {
-		case GL_INVALID_OPERATION:
-			std::cout << "GL_INVALID_OPERATION: Неверная операция." << std::endl;
-			break;
-		case GL_INVALID_VALUE:
-			std::cout << "GL_INVALID_VALUE: Неверное значение." << std::endl;
-			break;
-		case GL_INVALID_ENUM:
-			std::cout << "GL_INVALID_ENUM: Неверный перечисляемый тип." << std::endl;
-			break;
-		case GL_OUT_OF_MEMORY:
-			std::cout << "GL_OUT_OF_MEMORY: Недостаточно памяти." << std::endl;
-			break;
-		default:
-			std::cout << "Неизвестный код ошибки: " << error << std::endl;
-			break;
-		}
-	}
-	*/
-}
-
-//void Release() {
-//    glDeleteVertexArrays(1, &VAO);
-//    glDeleteBuffers(1, &VBO);
-//    glDeleteBuffers(1, &EBO);
-//    glDeleteProgram(Program);
-//}
 
 void Init()
 {
-	// Инициализация шейдеров и буферов
-	// InitTexture();
-	// InitShader();
-	// InitBuffers();
-
 	glEnable(GL_DEPTH_TEST);
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
 void processInput(sf::Window& window)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
@@ -83,11 +40,9 @@ void processInput(sf::Window& window)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
 		lightType = 2;
 
-	// Проверка закрытия окна при нажатии ESC
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		window.close();
 
-	// Управление камерой с помощью клавиш WASD
 	float v = deltaTime;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 		v *= 2.5;
@@ -124,15 +79,12 @@ void processInput(sf::Window& window)
 	}
 
 	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;  // Инвертируем для работы с координатами камеры
+	float yoffset = lastY - ypos;  
 	lastX = xpos;
 	lastY = ypos;
 
-	// Обрабатываем движение мыши через камеру
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
-// utility function for loading a 2D texture from file
-// ---------------------------------------------------
 unsigned int loadTexture(char const* path)
 {
 	unsigned int textureID;
@@ -187,21 +139,14 @@ int main()
 		Shader("VS.vs", "S.phong.fs"),
 		Shader("VS.vs", "S.toonshading.fs"),
 		Shader("VS.vs", "S.ami_guch.fs"),
-		Shader("VS.vs", "S.toonshading.fs"),
-		Shader("VS.vs", "S.phong.fs"),
 		Shader("VS.vs", "D.phong.fs"),
 		Shader("VS.vs", "D.toonshading.fs"),
 		Shader("VS.vs", "D.ami_guch.fs"),
-		Shader("VS.vs", "D.toonshading.fs"),
-		Shader("VS.vs", "D.phong.fs"),
 		Shader("VS.vs", "P.phong.fs"),
 		Shader("VS.vs", "P.toonshading.fs"),
 		Shader("VS.vs", "P.ami_guch.fs"),
-		Shader("VS.vs", "P.toonshading.fs"),
-		Shader("VS.vs", "P.phong.fs"),
 	};
 
-	// Точечный источник света
 	Shader lightingShader = shaders[1];
 
 	vector<Model> models;
@@ -228,40 +173,29 @@ int main()
 		glm::vec3(-4.0f, 2.5f, 0.0f),
 	};
 
-	// shader configuration
-	// --------------------
 	lightingShader.use();
 	lightingShader.setInt("material.diffuse", 0);
 	lightingShader.setInt("material.specular", 1);
 	sf::Clock clock;
 
-	// Основной цикл
 	while (window.isOpen())
 	{
-		// per-frame time logic
-		// --------------------
 		float currentFrame = clock.getElapsedTime().asSeconds();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		// input
-		// -----
 		processInput(window);
 
-		// render
-		// ------
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// be sure to activate shader when setting uniforms/drawing objects
 
-		// Прожектор
-		// Draw models
 		for (int i = 0; i < models.size(); i++)
 		{
+			//S
 			if (lightType == 0)
 			{
-				lightingShader = shaders[lightType * 5 + i];
+				lightingShader = shaders[lightType * 3 + (i % 3)];
 
 				lightingShader.use();
 				lightingShader.setVec3("light.position", camera.Position);
@@ -270,49 +204,41 @@ int main()
 				lightingShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
 				lightingShader.setVec3("viewPos", camera.Position);
 
-				// light properties
 				lightingShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
-				// we configure the diffuse intensity slightly higher; the right lighting conditions differ with each lighting method and environment.
-				// each environment and lighting type requires some tweaking to get the best out of your environment.
 				lightingShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
 				lightingShader.setVec3("light.specular", 0.8f, 0.8f, 0.8f);
 				lightingShader.setFloat("light.constant", 1.0f);
 				lightingShader.setFloat("light.linear", 0.09f);
 				lightingShader.setFloat("light.quadratic", 0.032f);
 
-				// material properties
 				lightingShader.setFloat("material.shininess", 32.0f);
-				// be sure to activate shader when setting uniforms/drawing objects
 			}
 
-			// Направленный источник света
+			//D
 			else if (lightType == 1)
 			{
-				lightingShader = shaders[lightType * 5 + i];
+				lightingShader = shaders[lightType * 3 + (i%3)];
 
 				lightingShader.use();
-				lightingShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
-				lightingShader.setVec3("viewPos", camera.Position);
+				lightingShader.setVec3("lightProperties.lightDirection", -0.2f, -1.0f, -0.3f);
+				lightingShader.setVec3("cameraPosition", camera.Position);
 
-				// light properties
-				lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-				lightingShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
-				lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+				lightingShader.setVec3("lightProperties.lightAmbient", 0.2f, 0.2f, 0.2f);
+				lightingShader.setVec3("lightProperties.lightDiffuse", 1.0f, 1.0f, 1.0f);
+				lightingShader.setVec3("lightProperties.lightSpecular", 1.0f, 1.0f, 1.0f);
 
-				// material properties
-				lightingShader.setFloat("material.shininess", 32.0f);
+				lightingShader.setFloat("materialProperties.shiness", 32.0f);
 			}
-			// Точечный источник света
+
+			//P
 			else if (lightType == 2)
 			{
-				lightingShader = shaders[lightType * 5 + i];
+				lightingShader = shaders[lightType * 3 + (i % 3)];
 
-				// be sure to activate shader when setting uniforms/drawing objects
 				lightingShader.use();
 				lightingShader.setVec3("light.position", lightPos);
 				lightingShader.setVec3("viewPos", camera.Position);
 
-				// light properties
 				lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 				lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 				lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
@@ -320,17 +246,14 @@ int main()
 				lightingShader.setFloat("light.linear", 0.09f);
 				lightingShader.setFloat("light.quadratic", 0.032f);
 
-				// material properties
 				lightingShader.setFloat("material.shininess", 32.0f);
 			}
 
-			// view/projection transformations
 			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			glm::mat4 view = camera.GetViewMatrix();
 			lightingShader.setMat4("projection", projection);
 			lightingShader.setMat4("view", view);
 
-			// world transformation
 			glm::mat4 model = glm::mat4(1.0f);
 			lightingShader.setMat4("model", model);
 
@@ -342,10 +265,8 @@ int main()
 			models[i].Draw(lightingShader);
 		}
 
-		// ОбменBuffers
 		window.display();
 
-		// Обработка событий
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
